@@ -1,1 +1,88 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Confession</title>
+    <meta name="description" content="A cute interactive love confession page">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💝</text></svg>">
+    <script src="https://unpkg.com/vue@3.5.13/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-pink-50 min-h-screen flex items-center justify-center">
+    <div id="app" class="text-center p-8">
+        <div v-if="!accepted">
+            <h1 class="text-4xl mb-6 text-pink-600 font-bold">I love you, hael!</h1>
+            <p class="text-2xl mb-8 text-pink-500">do you love me too? :3</p>
+            
+            <div class="flex justify-center gap-4">
+                <button 
+                    @click="handleNo" 
+                    v-if="noClickCount < 10"
+                    :style="noButtonStyle"
+                    class="px-6 py-2 bg-gray-200 hover:bg-gray-300 rounded transition-all">
+                    No
+                </button>
+                <button 
+                    @click="handleYes"
+                    class="px-6 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded transition-colors">
+                    Yes
+                </button>
+            </div>
+            
+            <p v-if="noClickCount >= 10" class="mt-6 text-pink-600 font-medium">
+                There's no way to reject my love, so just click Yes :3
+            </p>
+        </div>
+
+        <div v-else class="text-6xl text-pink-600 font-bold">
+            Yayy!!
+            <div class="mt-8">
+                <img src="https://media.giphy.com/media/M90mJvfWfd5mbUuULX/giphy.gif" 
+                     alt="Love hearts" 
+                     class="mx-auto rounded-lg shadow-lg">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref } = Vue;
+
+        createApp({
+            setup() {
+                const accepted = ref(false);
+                const noClickCount = ref(0);
+                const noButtonStyle = ref({
+                    position: 'relative',
+                    top: '0px',
+                    left: '0px'
+                });
+
+                function handleNo() {
+                    noClickCount.value++;
+                    // Random position within viewport
+                    const maxX = window.innerWidth - 100;
+                    const maxY = window.innerHeight - 40;
+                    noButtonStyle.value = {
+                        position: 'fixed',
+                        top: Math.random() * maxY + 'px',
+                        left: Math.random() * maxX + 'px'
+                    };
+                }
+
+                function handleYes() {
+                    accepted.value = true;
+                }
+
+                return {
+                    accepted,
+                    noClickCount,
+                    noButtonStyle,
+                    handleNo,
+                    handleYes
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
